@@ -1,11 +1,31 @@
-let tacos = [
+let food = [
     {
-        name: 'Brisket Taco',
-        id: 1
+        type: 'Tacos',
+        id: 1,
+        items: [
+            {
+                name: 'Brisket Taco',
+                id: 1
+            },
+            {
+                name: 'Fajita Chicken',
+                id: 2
+            }
+        ]
     },
     {
-        name: 'Fajita Chicken',
-        id: 2
+        type: 'Burritos',
+        id: 2,
+        items: [
+            {
+                name: 'Spicy Pork',
+                id: 1
+            },
+            {
+                name: 'Bean and Cheese',
+                id: 2
+            }
+        ]
     }
 ]
 
@@ -13,44 +33,44 @@ let tacos = [
 module.exports = {
     create: (req, res) => {
         console.log(req.body)
-        const {name} = req.body
-        const id = tacos.length+1
-        const newTaco = {
+        const {name, index} = req.body
+        const id = food[index].items.length+1
+        const newItem = {
             name: name,
             id: id
         }
-        tacos.push(newTaco)
-        res.status(200).send(tacos)
+        food[index].items.push(newItem)
+        res.status(200).send(food)
     },
 
-    getTacos: (req, res) => {
-        res.status(200).send(tacos)
+    getFood: (req, res) => {
+        res.status(200).send(food)
     },
 
     update: (req, res) => {
         console.log(req.params)
         const {name} = req.body
         const id = req.params.id
-        // console.log(id)
-        let index = tacos.findIndex((taco) => {
-            return taco.id == id
+        const index = req.query.index
+        let itemIndex = food[index].items.findIndex((item) => {
+            return item.id == id
         })
-        console.log(index)
-        taco = tacos[index]
-        tacos[index] = {
+        item = food[index].items[itemIndex]
+        food[index].items[itemIndex] = {
             name: name,
-            id: taco.id
+            id: item.id
         }
-        res.status(200).send(tacos)
+        res.status(200).send(food)
     },
 
     delete: (req, res) => {
         const id = req.params.id
-        let index = tacos.findIndex((taco) => {
-            return taco.id == id
+        const index = req.query.index
+        let itemIndex = food[index].items.findIndex((item) => {
+            return item.id == id
         })
-        tacos.splice(index, 1)
-        res.status(200).send(tacos)
+        food[index].items.splice(itemIndex, 1)
+        res.status(200).send(food)
     }
 
 }
